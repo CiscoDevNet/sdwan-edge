@@ -3,11 +3,11 @@
 
 
 Sample implementations of IaC for deploying the Cisco Catalyst 8000v on different platforms:
-- [Amazon AWS](Catalyst8000v/aws/README.md)
-- [Microsoft Azure](Catalyst8000v/azure/README.md)
-- [Google GCP](Catalyst8000v/gcp/README.md)
-- [VMWare vSphere](Catalyst8000v/vmware/README.md)
-- [Openstack](Catalyst8000v/openstack/README.md)
+- [Amazon AWS](Catalyst8000v/aws/)
+- [Microsoft Azure](Catalyst8000v/azure/)
+- [Google GCP](Catalyst8000v/gcp/)
+- [VMWare vSphere](Catalyst8000v/vmware/)
+- [Openstack](Catalyst8000v/openstack/)
 
 as well as auto-onboarding into the Cisco SDWAN overlay. 
 Below the generic architercture of the minimal deployment.
