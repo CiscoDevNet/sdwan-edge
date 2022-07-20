@@ -1,0 +1,23 @@
+{
+    "vsphere_server": "",
+    "vsphere_user"  : "",
+    "vsphere_password": "",
+
+    "vsphere_datacenter": "",
+    "vsphere_cluster": "",
+    "vsphere_datastore": "",
+    
+    "vsphere_folder": "sdwan",
+    "vsphere_network": "Transport-Net",
+
+    "iso_url": "iso/c8000v-universalk9.17.08.01a.iso",
+    "iso_checksum": "f3fee51d4f19c46af6c78e1006c1aa4b",
+
+    "vm_name": "c8kv-template",
+    "vm_cpu_num": "4",
+    "vm_mem_size": "8192",
+
+    "os_disk_size": "20480",
+    "disk_thin_provision": "false"
+
+}

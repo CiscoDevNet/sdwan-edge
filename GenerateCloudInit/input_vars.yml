@@ -1,0 +1,18 @@
+vmanage_host: "1.2.3.4"
+vmanage_user: "admin"
+vmanage_pass: "Cisco123"
+
+uuid: "C8K-56727E71-D1D1-BE93-77A9-9C11B7DAA717"
+inclDefRootCert: false
+#device_model: "vedge-C8000V"
+
+hostname: "sdwan_c8kv"
+system_ip: "10.100.100.101"
+site_id: "101"
+
+username: "admin"
+password: "Cisco123#"
+
+ntp_server: "169.254.169.123"
+
+generated_cloud_init: "cloud-init/ciscosdwan_cloud_init.cfg"

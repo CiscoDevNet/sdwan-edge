@@ -1,0 +1,42 @@
+- name: Device bootstrap
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Include input vars
+      include_vars: input_vars.yml
+      
+    - name: Get device bootstrap
+      vmanage_device_bootstrap:
+        user: "{{ vmanage_user }}"
+        host: "{{ vmanage_host }}"
+        password: "{{ vmanage_pass }}"
+        uuid: "{{ uuid|default(omit) }}"
+        inclDefRootCert: "{{ inclDefRootCert }}"
+        model: "{{ device_model|default(omit) }}"
+      register: device_bootstrap
+      
+    - name: Get vmanage settings
+      vmanage_settings_get:
+        user: "{{ vmanage_user }}"
+        host: "{{ vmanage_host }}"
+        password: "{{ vmanage_pass }}"
+      register: vmanage_settings
+
+    - name: Setting variables
+      set_fact:
+        bootstrap: "{{ device_bootstrap.bootstrap.bootstrapConfig }}"
+        vbond_host: "{{ vmanage_settings.vbond_host }}"
+        vbond_port: "{{ vmanage_settings.vbond_port }}"
+        organization: "{{ vmanage_settings.organization }}"
+
+    - name: Generate day0 from template
+      template:
+        src: templates/day0.j2
+        dest: "{{ generated_cloud_init }}"
+      when: '"multipart/mixed" not in bootstrap'
+    - name: Generate day0 from template (template is atteched in vmanage)
+      template:
+        src: templates/day0_attached.j2
+        dest: "{{ generated_cloud_init }}"
+      when: '"multipart/mixed" in bootstrap'
