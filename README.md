@@ -20,7 +20,7 @@ There are 2 interfaces configured on the c8kv:
 
 Additional minimal configuration is also provided: hostname, ntp server, user&password to be created.
 
-The required cloud-init file for the different scripts can be generated using the ansible script in the GenerateCloudInit folder, details [here](../GenerateCloudInit/README.md).
+The required cloud-init file for the different scripts can be generated using the ansible script in the GenerateCloudInit folder, details [here](../GenerateCloudInit).
 
 The deployment scripts are aplying a day0 configuration on the router which is auto-generated with the provided Ansible scripts, making the router to work in Controller mode and to onboard on the specified SDWAN fabric.
 
