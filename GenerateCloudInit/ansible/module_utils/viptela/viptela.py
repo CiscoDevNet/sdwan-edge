@@ -239,6 +239,18 @@ class viptelaModule(object):
         self.request('/dataservice/settings/configuration/certificate/enterpriserootca', method='PUT', payload=payload)
         return
 
+    def get_unused_device(self, model):
+        response = self.request('/dataservice/system/device/vedges?model={0}&state=tokengenerated'.format(model))
+
+        if response.json:
+            try:
+                return response.json['data'][0]
+            except:
+                return response.json['data']
+        else:
+            return {}
+
+
     def get_device_by_state(self, state, type='vedges'):
         response = self.request('/dataservice/system/device/{0}?state={1}'.format(type, state))
 
