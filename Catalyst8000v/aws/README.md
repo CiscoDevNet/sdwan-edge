@@ -42,6 +42,15 @@ The complete list of input variables:
 - image_id: AMI id for the c8000v (region specific)
 - instance_type: type of AWS instance to be deployed (eg. c5n.large)
 
+The AWS CLI can be used to determine the C8000v AMI for the region and specific SD-WAN/IOS-XE version, as follows:
+
+    aws ec2 describe-images \
+        --filters "Name=name,Values=Cisco-C8K-${IOSXE_VERSION}-42cb6e93-8d9d-490b-a73c-e3e56077ffd1" \
+        --query "reverse(sort_by(Images,&CreationDate))[0].ImageId" \
+        --output text --region $AWS_REGION
+
+The value of the IOSXE_VERSION variable can be an explicit version like `17.08.01a`, or a wildcarded minor version, like `17.06.*`. In the latter case the most recent available image will be used.
+
 Terraform deployment.
 ```
 $ terraform init
