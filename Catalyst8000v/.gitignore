@@ -2,4 +2,4 @@
 *.tfplan
 *.tfvars
 *.tfstate*
-ciscosdwan_cloud_init.cfg
+ciscosdwan_cloud_init.cfg*
