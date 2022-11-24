@@ -99,7 +99,7 @@ resource "azurerm_virtual_machine" "c8000v" {
     computer_name  = "${var.name}-vm"
     admin_username = var.account_username
     admin_password = var.account_password
-    custom_data    = file("cloud-init/ciscosdwan_cloud_init.cfg")
+    custom_data    = file("cloud-init/ciscosdwan_cloud_init.${var.name}.cfg")
   }
 
   os_profile_linux_config {

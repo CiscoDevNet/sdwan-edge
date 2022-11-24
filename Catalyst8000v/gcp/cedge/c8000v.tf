@@ -19,6 +19,6 @@ resource "google_compute_instance" "cedge" {
   }
 
   metadata = {
-    startup-script = file("cloud-init/ciscosdwan_cloud_init.cfg")
+    startup-script = file("cloud-init/ciscosdwan_cloud_init.${var.name}.cfg")
   }
 }

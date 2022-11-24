@@ -4,7 +4,7 @@ resource "null_resource" "iso" {
     isofile = "cloud-init/${var.name}.iso"
   }
   provisioner "local-exec" {
-    command = "mkisofs -l -o ${self.triggers.isofile} -volid cidata -joliet -rock cloud-init/ciscosdwan_cloud_init.cfg"
+    command = "mkisofs -l -o ${self.triggers.isofile} -volid cidata -joliet -rock cloud-init/ciscosdwan_cloud_init.${var.name}.cfg"
   }
   provisioner "local-exec" {
     when       = destroy

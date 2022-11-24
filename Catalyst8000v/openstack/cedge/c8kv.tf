@@ -2,7 +2,7 @@ resource "openstack_compute_instance_v2" "cedge" {
   name      = var.name
   image_id  = data.openstack_images_image_v2.cedge.id
   flavor_id = data.openstack_compute_flavor_v2.cedge.id
-  user_data = file("cloud-init/ciscosdwan_cloud_init.cfg")
+  user_data = file("cloud-init/ciscosdwan_cloud_init.${var.name}.cfg")
   config_drive = true
   
   network {

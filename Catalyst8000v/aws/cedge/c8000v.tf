@@ -28,7 +28,7 @@ resource "aws_instance" "cedge" {
   ami                         = var.image_id
   instance_type               = var.instance_type
   availability_zone           = data.aws_subnet.subnet_transport.availability_zone
-  user_data                   = file("cloud-init/ciscosdwan_cloud_init.cfg")
+  user_data                   = file("cloud-init/ciscosdwan_cloud_init.${var.name}.cfg")
   user_data_replace_on_change = true
   network_interface {
     device_index         = 0
