@@ -1,3 +1,4 @@
+variable "project" {}
 variable "region" {}
 
 variable "subnet_transport_prefix" {}
