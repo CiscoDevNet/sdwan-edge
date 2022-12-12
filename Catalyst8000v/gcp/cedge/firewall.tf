@@ -16,7 +16,7 @@ resource "google_compute_firewall" "transport" {
     ports    = ["12346-13156"]
   }
 
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = var.acl_cidr_blocks
 
 }
 
@@ -28,5 +28,5 @@ resource "google_compute_firewall" "service" {
     protocol = "all"
   }
 
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = var.acl_cidr_blocks
 }
