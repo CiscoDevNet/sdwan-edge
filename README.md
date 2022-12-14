@@ -1,20 +1,20 @@
 # Cisco SDWAN edge deployments
 
-
-
 Sample implementations of IaC for deploying the Cisco Catalyst 8000v on different platforms:
+
 - [Amazon AWS](Catalyst8000v/aws/)
 - [Microsoft Azure](Catalyst8000v/azure/)
 - [Google GCP](Catalyst8000v/gcp/)
 - [VMWare vSphere](Catalyst8000v/vmware/)
 - [Openstack](Catalyst8000v/openstack/)
 
-as well as auto-onboarding into the Cisco SDWAN overlay. 
+as well as auto-onboarding into the Cisco SDWAN overlay.
 Below is the generic architecture of the minimal deployment.
 
 ![C8KV Deployment](cedge_deployment.png)
 
 There are 2 interfaces configured on the c8kv:
+
 - GE1 will be configured as a Tunnel interface and will connect to the SDWAN CP
 - GE2 will connect to an internal private network
 
