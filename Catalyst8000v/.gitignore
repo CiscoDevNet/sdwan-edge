@@ -1,5 +1,6 @@
 .terraform*
 *.tfplan
 *.tfvars
+*.auto.tfvars.json
 *.tfstate*
 ciscosdwan_cloud_init.*
