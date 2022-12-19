@@ -27,7 +27,7 @@ resource "vsphere_virtual_machine" "cedge" {
 
   cdrom {
     datastore_id = data.vsphere_datastore.ds.id
-    path         = "sdwan_iso/${var.name}.iso"
+    path         = "cloud-init_iso/${var.name}.iso"
  }
 
   network_interface {
