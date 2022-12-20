@@ -12,7 +12,7 @@ The scripts will create a new c8kv instance from an existing template. Creating 
 
 ## Create the template using packer
 
-Using the [vSphere packer plugin](https://github.com/hashicorp/packer-plugin-vsphere) the scripts will create a template based on the c8kv iso image.
+Using the [vsphere-iso builder](https://developer.hashicorp.com/packer/plugins/builders/vsphere/vsphere-iso) of the [vSphere packer plugin](https://github.com/hashicorp/packer-plugin-vsphere) the scripts will create a template based on the c8kv iso image.
 
 - Go to image directory
 - Edit variables.json with appropriate settings.
@@ -23,7 +23,7 @@ With image as your current working directory, run packer:
 
     packer build -var-file ./variables.json .
 
-NOTE:  Due to a bug in the vsphere packer plugin (v 1.0.4) the script is not able to detect when the instance is booted and has connectivity, so for now we use the "none" communicator and ask for a manual shutdown of the VM before is transformed in a template.
+> **NOTE:**  The way C8Kv images are converted into templates requires a full boot of the initial VM with the ISO attached, which will format the hard drive and transfer some initial data, after which it will reboot. However, the VM should not be allowed to boot a second time after this initialization, as it will lose its capacity to be configured through cloud-init. The process to prevent this and shut down the VM when appropriate is not yet fully automated, as the VM reboot moment cannot be detected. What the Packer script does currently is to wait 42 seconds after VM boot, which is the time to complete the first phase of hard drive formatting and reboot on a current UCS based vSphere environment, but may obviously not work in all cases. After the first phase the VM will reboot and present a Grub menu with a 5 second timeout. The Packer script targets this menu with the 42 seconds wait time, and then moves the cursor down one item, to stop the 5 second timeout counter of the Grub menu. By using the "none" communicator of the Packer vSphere provider, the CLI will show a request for a manual shutdown of the VM within 5 minutes, before it is transformed into a template. It is a good idea no to rely on the 42 seconds wait time and monitor the console of the VM during the boot process to power it off manually as soon as the Grub menu is presented.
 
 ## Create c8000v in vSphere
 

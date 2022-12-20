@@ -1,15 +1,16 @@
 source "vsphere-iso" "cedge" {
+  vm_version          = 13
   CPUs                = var.vm_cpu_num
   RAM                 = var.vm_mem_size
-  boot_wait           = "2s"
-  boot_command        = ["<wait2m>"]
+  boot_wait           = "42s"
+  boot_command        = ["<down>"]
   cluster             = var.vsphere_cluster
   convert_to_template = true
   datacenter          = var.vsphere_datacenter
   datastore           = var.vsphere_datastore
   firmware            = "bios"
   folder              = var.vsphere_folder
-  guest_os_type       = "otherGuest"
+  guest_os_type       = "other3xLinux64Guest"
   insecure_connection = "true"
   iso_checksum        = var.iso_checksum
   iso_urls            = [var.iso_url]
