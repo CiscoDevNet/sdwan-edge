@@ -4,3 +4,4 @@
 *.auto.tfvars.json
 *.tfstate*
 ciscosdwan_cloud_init.*
+*.iso
