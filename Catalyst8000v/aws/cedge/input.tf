@@ -9,3 +9,7 @@ variable "subnet_service" {}
 
 variable "image_id" {}
 variable "instance_type" {}
+
+variable "route53_zone" {
+  default = ""
+}
