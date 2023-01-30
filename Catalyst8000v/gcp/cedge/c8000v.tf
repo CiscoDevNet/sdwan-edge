@@ -1,7 +1,8 @@
 resource "google_compute_instance" "cedge" {
-  name         = var.name
-  machine_type = var.instance_type
-  zone         = var.zone
+  name           = var.name
+  machine_type   = var.instance_type
+  zone           = var.zone
+  can_ip_forward = true
 
   boot_disk {
     initialize_params {
