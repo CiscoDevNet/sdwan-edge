@@ -13,3 +13,5 @@ variable "instance_type" {}
 variable "route53_zone" {
   default = ""
 }
+
+variable "teagent_account_token" {}

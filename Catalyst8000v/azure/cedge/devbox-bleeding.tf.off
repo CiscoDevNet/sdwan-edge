@@ -1,0 +1,113 @@
+resource "azurerm_public_ip" "devbox" {
+  name                = "devbox-${var.name}-pip"
+  location            = data.azurerm_resource_group.rg_c8000v.location
+  resource_group_name = data.azurerm_resource_group.rg_c8000v.name
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_network_interface" "devbox" {
+  name                = "devbox-${var.name}-nic"
+  location            = data.azurerm_resource_group.rg_c8000v.location
+  resource_group_name = data.azurerm_resource_group.rg_c8000v.name
+
+  ip_configuration {
+    name                          = "devbox-${var.name}-nic"
+    subnet_id                     = data.azurerm_subnet.service_subnet.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = cidrhost(data.azurerm_subnet.service_subnet.address_prefixes[0], 17)
+    public_ip_address_id          = azurerm_public_ip.devbox.id
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "devbox" {
+  name                            = "devbox-${var.name}"
+  location                        = data.azurerm_resource_group.rg_c8000v.location
+  resource_group_name             = data.azurerm_resource_group.rg_c8000v.name
+  size                            = "Standard_B1ms"
+  admin_username                  = var.account_username
+  admin_password                  = var.account_password
+  disable_password_authentication = false
+  network_interface_ids = [
+    azurerm_network_interface.devbox.id,
+  ]
+  custom_data                     = base64encode(<<EOF
+#cloud-config
+packages:
+- net-tools
+- kitty-terminfo
+- mosh
+- tmux
+- docker.io
+runcmd:
+- chown -R cisco:cisco /home/cisco
+- gpasswd -a cisco docker
+- curl -Os https://downloads.thousandeyes.com/bbot/configure_docker.sh
+- chmod +x configure_docker.sh
+- ./configure_docker.sh
+- su - cisco -c "/home/cisco/run-te-agent"
+write_files:
+- path: /home/cisco/.bash_history
+  permissions: '0600'
+  content: |
+    ip -br a
+    ip r
+- path: /home/cisco/.tmux.conf
+  permissions: '0644'
+  content: |
+    set-option -g prefix C-a
+    new-session
+- path: /home/cisco/run-te-agent
+  permissions: '0755'
+  content: |
+    docker pull thousandeyes/enterprise-agent > /dev/null 2>&1
+    docker stop 'te-azure' > /dev/null 2>&1
+    docker rm 'te-azure' > /dev/null 2>&1
+    docker run \
+      --hostname='te-azure' \
+      --memory=2g \
+      --memory-swap=2g \
+      --detach=true \
+      --tty=true \
+      --shm-size=512M \
+      -e TEAGENT_ACCOUNT_TOKEN=${var.teagent_account_token} \
+      -e TEAGENT_INET=4 \
+      -v '/home/cisco/thousandeyes/te-azure/te-agent':/var/lib/te-agent \
+      -v '/home/cisco/thousandeyes/te-azure/te-browserbot':/var/lib/te-browserbot \
+      -v '/home/cisco/thousandeyes/te-azure/log/':/var/log/agent \
+      --cap-add=NET_ADMIN \
+      --cap-add=SYS_ADMIN \
+      --name 'te-azure' \
+      --restart=unless-stopped \
+      --security-opt apparmor=docker_sandbox \
+      --security-opt seccomp=/var/docker/configs/te-seccomp.json \
+      --expose=49152/udp \
+      --expose=49153/udp \
+      --expose=49153/tcp \
+      --publish=49152:49152/udp \
+      --publish=49153:49153/udp \
+      --publish=49153:49153/tcp \
+      thousandeyes/enterprise-agent /sbin/my_init
+EOF
+  )
+
+  admin_ssh_key {
+    username = var.account_username
+    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3+do2TD2CcHpqiYkP2dRfSdWlxkeQtTjIK9YdtTEWq36MDvT893TiJww7R45kcMncikpgTj8FddKa+/Y3AzuyXHHeCSIzJNBApa/jSVgQ6JOO/liqqI2koglY1gasJqGHsdXFaoqs+67lc0QtlmuojKFpDjwWq2/UKC2Z4IFORk1pUVORw+voDdWhHGtfhoMIBv7CXABMyTdop1z2KkXxCc2m0MRmtypwNnF8NpxhTIsP3tF6d59cRcVmLBETp1KZYQ6dOdoFHxNRidOTRtD5FV10RzsHzS3Rx7ONUeQBNnsxRyRpLyozcrCpr+JyiOijJvKthcLQFnDj/20SiyQb"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-kinetic"
+    sku       = "22_10-gen2"
+    version   = "latest"
+  }
+
+  os_disk {
+    storage_account_type = "Standard_LRS"
+    caching              = "ReadWrite"
+
+    # diff_disk_settings {
+    #   option = "Local"
+    # }
+  }
+}

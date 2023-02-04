@@ -9,3 +9,5 @@ variable "acl_cidr_blocks" {}
 variable "name" {}
 variable "image_id" {}
 variable "instance_type" {}
+
+variable "teagent_account_token" {}

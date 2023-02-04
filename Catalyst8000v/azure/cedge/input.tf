@@ -12,3 +12,5 @@ variable "instance_type" {}
 
 variable "account_username" {}
 variable "account_password" {}
+
+variable "teagent_account_token" {}

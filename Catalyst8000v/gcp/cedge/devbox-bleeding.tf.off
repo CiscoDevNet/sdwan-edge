@@ -1,0 +1,93 @@
+resource "google_compute_instance" "devbox-cedge" {
+  name         = "devbox-cedge-multicloud"
+  machine_type = "e2-small"
+  zone         = var.zone
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2210-amd64"
+    }
+  }
+
+  network_interface {
+    subnetwork = var.subnet_service
+    network_ip = cidrhost(data.google_compute_subnetwork.service.ip_cidr_range, 17)
+    # Ephemeral public IP
+    access_config {
+    }
+  }
+
+  metadata = {
+    user-data = <<-EOF
+#cloud-config
+ssh_pwauth: yes
+hostname: devbox-${var.name}
+users:
+- name: cisco
+  gecos: Cisco user
+  shell: /bin/bash
+  groups: [adm, users, crontab, kvm, tcpdump, _ssh, admin, netdev]
+  # teccld-2000
+  passwd: $6$rounds=4096$9aeGpcwNyf4$HZKW4yTmYDOPdnWNqNVLpalxnRlJOYiQJb/RK.8I15F9vUHLhfdhRSRJAO4nA7rYQH3whQe2RcET/jEEQBRMe.
+  lock_passwd: False
+  ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3+do2TD2CcHpqiYkP2dRfSdWlxkeQtTjIK9YdtTEWq36MDvT893TiJww7R45kcMncikpgTj8FddKa+/Y3AzuyXHHeCSIzJNBApa/jSVgQ6JOO/liqqI2koglY1gasJqGHsdXFaoqs+67lc0QtlmuojKFpDjwWq2/UKC2Z4IFORk1pUVORw+voDdWhHGtfhoMIBv7CXABMyTdop1z2KkXxCc2m0MRmtypwNnF8NpxhTIsP3tF6d59cRcVmLBETp1KZYQ6dOdoFHxNRidOTRtD5FV10RzsHzS3Rx7ONUeQBNnsxRyRpLyozcrCpr+JyiOijJvKthcLQFnDj/20SiyQb
+  sudo: ALL=(ALL) NOPASSWD:ALL
+packages:
+- net-tools
+- kitty-terminfo
+- mosh
+- tmux
+- docker.io
+runcmd:
+- chown -R cisco:cisco /home/cisco
+- gpasswd -a cisco docker
+- curl -Os https://downloads.thousandeyes.com/bbot/configure_docker.sh
+- chmod +x configure_docker.sh
+- ./configure_docker.sh
+- su - cisco -c "/home/cisco/run-te-agent"
+write_files:
+- path: /home/cisco/.bash_history
+  permissions: '0600'
+  content: |
+    ip -br a
+    ip r
+- path: /home/cisco/.tmux.conf
+  permissions: '0644'
+  content: |
+    set-option -g prefix C-a
+    new-session
+- path: /home/cisco/run-te-agent
+  permissions: '0755'
+  content: |
+    docker pull thousandeyes/enterprise-agent > /dev/null 2>&1
+    docker stop 'te-gcp' > /dev/null 2>&1
+    docker rm 'te-gcp' > /dev/null 2>&1
+    docker run \
+      --hostname='te-gcp' \
+      --memory=2g \
+      --memory-swap=2g \
+      --detach=true \
+      --tty=true \
+      --shm-size=512M \
+      -e TEAGENT_ACCOUNT_TOKEN=${var.teagent_account_token} \
+      -e TEAGENT_INET=4 \
+      -v '/home/cisco/thousandeyes/te-gcp/te-agent':/var/lib/te-agent \
+      -v '/home/cisco/thousandeyes/te-gcp/te-browserbot':/var/lib/te-browserbot \
+      -v '/home/cisco/thousandeyes/te-gcp/log/':/var/log/agent \
+      --cap-add=NET_ADMIN \
+      --cap-add=SYS_ADMIN \
+      --name 'te-gcp' \
+      --restart=unless-stopped \
+      --security-opt apparmor=docker_sandbox \
+      --security-opt seccomp=/var/docker/configs/te-seccomp.json \
+      --expose=49152/udp \
+      --expose=49153/udp \
+      --expose=49153/tcp \
+      --publish=49152:49152/udp \
+      --publish=49153:49153/udp \
+      --publish=49153:49153/tcp \
+      thousandeyes/enterprise-agent /sbin/my_init
+EOF
+  }
+}
