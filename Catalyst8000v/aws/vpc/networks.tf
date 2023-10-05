@@ -42,7 +42,7 @@ resource "aws_internet_gateway" "instance" {
 }
 
 resource "aws_eip" "nat" {
-   vpc   = true
+  domain = "vpc"
 
   tags = merge(
     var.common_tags,

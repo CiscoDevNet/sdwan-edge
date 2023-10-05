@@ -57,7 +57,7 @@ resource "aws_instance" "cedge" {
 
 # Allocate and assign public IP address
 resource "aws_eip" "cedge_eip" {
-  vpc                       = true
+  domain                    = "vpc"
   network_interface         = aws_network_interface.transport.id
   associate_with_private_ip = tolist(aws_network_interface.transport.private_ips)[0]
   depends_on 		    	      = [aws_instance.cedge]
