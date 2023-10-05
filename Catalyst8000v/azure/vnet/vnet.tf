@@ -5,5 +5,6 @@ resource "azurerm_virtual_network" "vnet" {
   name                = var.name
   address_space       = [var.address_space]
   location            = var.region
+  tags                = var.common_tags
 }
 

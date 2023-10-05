@@ -53,6 +53,7 @@ resource "azurerm_network_security_group" "transport" {
     destination_address_prefix = "*"
   }
 
+  tags = var.common_tags
 }
 
 resource "azurerm_network_security_group" "service" {
@@ -84,6 +85,7 @@ resource "azurerm_network_security_group" "service" {
     destination_address_prefix = "*"
   }
 
+  tags = var.common_tags
 }
 
 

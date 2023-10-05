@@ -7,6 +7,7 @@ resource "azurerm_public_ip" "public" {
   resource_group_name = data.azurerm_resource_group.rg_c8000v.name
   allocation_method   = "Static"
   sku                 = "Standard"
+  tags                = var.common_tags
 }
 
 
@@ -24,6 +25,8 @@ resource "azurerm_network_interface" "transport" {
     public_ip_address_id          = azurerm_public_ip.public.id
   }
 
+  tags = var.common_tags
+
   depends_on = [azurerm_network_security_group.transport]
 }
 
@@ -38,6 +41,8 @@ resource "azurerm_network_interface" "service" {
     subnet_id                     = data.azurerm_subnet.service_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
+
+  tags = var.common_tags
 
   depends_on = [azurerm_network_security_group.service]
 }
@@ -105,6 +110,8 @@ resource "azurerm_virtual_machine" "c8000v" {
   os_profile_linux_config {
     disable_password_authentication = false
   }
+
+  tags = var.common_tags
 
   depends_on = [
     azurerm_network_interface_security_group_association.transport,
