@@ -7,9 +7,12 @@ resource "aws_network_interface" "transport" {
   source_dest_check = false
   description 			= "transport (vpn 0)"
 
-  tags = {
-    Name = "${var.name}_interface_transport" 
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}_interface_transport"
+    }
+  )
 }
 
 resource "aws_network_interface" "service" {
@@ -18,9 +21,12 @@ resource "aws_network_interface" "service" {
   security_groups 	= [aws_security_group.service.id]
   source_dest_check = false
   description 			= "service (vpn 1)"
-  tags = {
-    Name = "${var.name}_interface_service" 
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}_interface_service"
+    }
+  )
 }
 
 # Create SD-WAN Router
@@ -40,10 +46,12 @@ resource "aws_instance" "cedge" {
     network_interface_id = aws_network_interface.service.id
   }
 
-  tags = {
-    Name = var.name 
-  }
-
+  tags = merge(
+    var.common_tags,
+    {
+      Name = var.name
+    }
+  )
 }
 
 
@@ -53,7 +61,10 @@ resource "aws_eip" "cedge_eip" {
   network_interface         = aws_network_interface.transport.id
   associate_with_private_ip = tolist(aws_network_interface.transport.private_ips)[0]
   depends_on 		    	      = [aws_instance.cedge]
-  tags = {
-    Name = "${var.name}_eip" 
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}_eip"
+    }
+  )
 }

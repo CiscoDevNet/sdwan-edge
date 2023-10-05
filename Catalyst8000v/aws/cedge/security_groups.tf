@@ -58,9 +58,12 @@ resource "aws_security_group" "transport" {
         self 	  = "true"
     } 
 
-    tags = {
-      Name = "sdwan - transport"
-    }
+    tags = merge(
+        var.common_tags,
+        {
+            Name = "sdwan - transport"
+        }
+    )
 }
 
 resource "aws_security_group" "service" {
@@ -81,8 +84,11 @@ resource "aws_security_group" "service" {
         cidr_blocks = ["0.0.0.0/0"]
     }   
 
-    tags = {
-      Name = "sdwan - service"
-    }
+    tags = merge(
+        var.common_tags,
+        {
+            Name = "sdwan - service"
+        }
+    )
 }
 

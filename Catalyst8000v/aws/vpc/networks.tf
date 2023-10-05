@@ -6,9 +6,12 @@ resource "aws_subnet" "subnet_transport" {
   cidr_block        = var.subnet_transport_prefix
   availability_zone = var.availability_zone
 
-  tags = {
-    Name = "${var.subnet_name_prefix}-transport"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.subnet_name_prefix}-transport"
+    }
+  )
 }
 
 resource "aws_subnet" "subnet_service" {
@@ -16,9 +19,12 @@ resource "aws_subnet" "subnet_service" {
   cidr_block        = var.subnet_service_prefix
   availability_zone = var.availability_zone
 
-  tags = {
-    Name = "${var.subnet_name_prefix}-service"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.subnet_name_prefix}-service"
+    }
+  )
 }
 
 /*
@@ -27,18 +33,23 @@ resource "aws_subnet" "subnet_service" {
 resource "aws_internet_gateway" "instance" {
   vpc_id = aws_vpc.instance.id
 
-  tags = {
-    Name = "${var.name}-igw"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}-igw"
+    }
+  )
 }
 
 resource "aws_eip" "nat" {
    vpc   = true
 
-  tags = {
-    Name = "${var.name}-natgw"
-  }
-
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}-natgw"
+    }
+  )
 }
 
 resource "aws_nat_gateway" "instance" {
@@ -57,9 +68,12 @@ resource "aws_route_table" "transport" {
     gateway_id = aws_internet_gateway.instance.id
   }
 
-  tags = {
-    Name = "${var.name}-rt-transport"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}-rt-transport"
+    }
+  )
 }
 resource "aws_route_table" "service" {
   vpc_id = aws_vpc.instance.id
@@ -69,9 +83,12 @@ resource "aws_route_table" "service" {
     nat_gateway_id = aws_nat_gateway.instance.id
   }
 
-  tags = {
-    Name = "${var.name}-rt-service"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "${var.name}-rt-service"
+    }
+  )
 }
 
 /*
