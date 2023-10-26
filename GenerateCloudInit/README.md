@@ -30,4 +30,4 @@ When you no longer need the virtual environment, you can delete it with:
 
 Another alternative to run `ansible-playbook` is to use the [Docker container](https://github.com/CiscoDevNet/sdwan-devops/pkgs/container/sdwan-devops/58460101?tag=cloud) created by the [sdwan-devops](https://github.com/CiscoDevNet/sdwan-devops/tree/cloud) project:
 
-    docker run -it --rm -v $(pwd):/ansible --env PWD="/ansible" ghcr.io/ciscodevnet/sdwan-devops:cloud ansible-playbook ./generate-cloud-init.yml
+    docker run -it --rm -v $(pwd):/ansible --env PWD="/ansible" ghcr.io/ciscodevnet/sdwan-devops:main ansible-playbook ./generate-cloud-init.yml
