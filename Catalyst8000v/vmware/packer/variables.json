@@ -16,6 +16,7 @@
     "vm_name": "c8kv-template",
     "vm_cpu_num": "4",
     "vm_mem_size": "8192",
+    "vm_boot_wait": "45s",
 
     "os_disk_size": "20480",
     "disk_thin_provision": "false"

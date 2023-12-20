@@ -2,7 +2,7 @@ source "vsphere-iso" "cedge" {
   vm_version          = 13
   CPUs                = var.vm_cpu_num
   RAM                 = var.vm_mem_size
-  boot_wait           = "42s"
+  boot_wait           = var.vm_boot_wait
   boot_command        = ["<down>"]
   cluster             = var.vsphere_cluster
   convert_to_template = true

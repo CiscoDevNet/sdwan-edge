@@ -13,6 +13,7 @@ variable    "iso_checksum" {}
 variable    "vm_name" {}
 variable    "vm_cpu_num" {}
 variable    "vm_mem_size" {}
+variable    "vm_boot_wait" {}
 variable    "os_disk_size" {}
 variable    "disk_thin_provision" {}
 
