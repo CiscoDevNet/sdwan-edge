@@ -82,7 +82,7 @@ resource "azurerm_virtual_machine" "c8000v" {
 
   plan {
     publisher = "cisco"
-    product   = "cisco-c8000v"
+    product   = "cisco-c8000v-byol"
     name      = var.image_id
   }
 
@@ -95,7 +95,7 @@ resource "azurerm_virtual_machine" "c8000v" {
 
   storage_image_reference {
     publisher = "cisco"
-    offer     = "cisco-c8000v"
+    offer     = "cisco-c8000v-byol"
     sku       = var.image_id
     version   = "latest"
   }

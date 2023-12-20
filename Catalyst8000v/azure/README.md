@@ -37,11 +37,11 @@ Login to Azure
 
 To list all C8000v images:
 
-    az vm image list --all -l westeurope  -p cisco -f cisco-c8000v -o table
+    az vm image list --all -l westeurope  -p cisco -f cisco-c8000v-byol -o table
 
 You have to accept the legal terms on this subscription before being able to deploy:
 
-    az vm image terms accept --urn cisco:cisco-c8000v:17_07_01a-byol:latest
+    az vm image terms accept --urn cisco:cisco-c8000v-byol:17_12_01a-byol:latest
 
 ### Using a Service Principal and a Client Secret
 
