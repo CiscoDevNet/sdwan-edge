@@ -5,6 +5,7 @@
 
     "vsphere_datacenter": "",
     "vsphere_cluster": "",
+    "esxi_server": "",
     "vsphere_datastore": "",
     
     "vsphere_folder": "sdwan",

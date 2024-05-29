@@ -5,6 +5,7 @@ source "vsphere-iso" "cedge" {
   boot_wait           = var.vm_boot_wait
   boot_command        = ["<down>"]
   cluster             = var.vsphere_cluster
+  host                = var.esxi_server
   convert_to_template = true
   datacenter          = var.vsphere_datacenter
   datastore           = var.vsphere_datastore

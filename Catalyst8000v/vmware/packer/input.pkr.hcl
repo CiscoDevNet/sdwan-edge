@@ -3,6 +3,7 @@ variable    "vsphere_user" {}
 variable    "vsphere_password" {}
 variable    "vsphere_datacenter" {}
 variable    "vsphere_cluster" {}
+variable    "esxi_server" {}
 variable    "vsphere_network" {}
 variable    "vsphere_datastore" {}
 variable    "vsphere_folder" {}
